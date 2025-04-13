@@ -186,9 +186,327 @@
             <option value="https://proxy.mrdigilink.workers.dev/?url=http://panel.globesrv.com:80/xmltv.php?username=umQjiXFzzs&password=2Wnwkqs5sB">GlobeSrv 1 EPG (XML) - Worker</option>
             <option value="https://proxy.mrdigilink.workers.dev/?url=http://panel.globesrv.com:80/xmltv.php?username=12htrialbad924&password=42de2737d2">GlobeSrv 2 EPG (XML) - Worker</option>
             <option value="https://proxy.mrdigilink.workers.dev/?url=http://activefrance.net/xmltv.php?username=F17103C21112C14&password=xJYbCkwLRR">ActiveFrance EPG (XML) - Worker</option>
-            <option value="https://proxy.mrdigilink.workers.dev/?url=http://imoxof.xyz:80/xmltv.php?username=WREDX8JMBY2MC3P&password=3v2iZTs6Gz">Imoxof EPG (XML) - Worker</option>
             <!-- Source Xtream directement (sans proxy) -->
-            <option value="http://xml.xtream.top:2052/epg.xml">Xtream EPG Secure (XML)</option>
+            <option value="https://xml.xtream.top:2052/epg.xml">Xtream EPG Secure (XML)</option>
+            <!-- Source Asparecargas directement (HTTPS) -->
+            <option value="https://www.iptv.asparecargas.net/xmltv.php">IPTV Asparecargas (XML)</option>
+            <!-- Réintégration de la source Foviptv via Worker -->
+            <option value="https://proxy.mrdigilink.workers.dev/?url=http://foviptv.link:8080/xmltv.php?username=EPG&password=EPG&prev_days=0&next_days=1">Foviptv EPG (XML) - Worker</option>
+        </select>
+        <select id="channel-select" onchange="scrollToChannel(this.value)" disabled>
+            <option value="">Choisir une chaîne</option>
+        </select>
+    </div>
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="Rechercher un programme..." oninput="searchPrograms()">
+        <button onclick="resetHighlights()">Purger les couleurs</button>
+    </div>
+    <div id="search-results"></div>
+    <div id="loading" class="loading">Chargement...</div>
+    <div id="error" class="error"></div>
+    <div id="channel-list"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
+    <script>
+        let allPrograms = [];
+
+        async function loadCategory() {
+            const select = document.getElementById('category-select');
+            const channelSelect = document.getElementById('channel-select');
+            const url = select.value;
+            const loading = document.getElementById('loading');
+            const errorDiv = document.getElementById('error');
+            const channelList = document.getElementById('channel-list');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+
+            loading.style.display = 'block';
+            errorDiv.textContent = '';
+            channelList.innerHTML = '';
+            channelSelect.innerHTML = '<option value="">Choisir une chaîne</option>';
+            channelSelect.disabled = true;
+            searchInput.value = '';
+            searchResults.style.display = 'none';
+            searchResults.innerHTML = '';
+            allPrograms = [];
+
+            try {
+                let xmlText;
+                if (url.includes('.gz')) {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('Erreur réseau lors du chargement du fichier GZ');
+                    const arrayBuffer = await response.arrayBuffer();
+                    const decompressed = pako.ungzip(new Uint8Array(arrayBuffer));
+                    xmlText = new TextDecoder().decode(decompressed);
+                } else {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('Erreur réseau lors du chargement du fichier XML');
+                    xmlText = await response.text();
+                }
+
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+                const channels = xmlDoc.getElementsByTagName('channel');
+                const programmes = xmlDoc.getElementsByTagName('programme');
+
+                const channelMap = new Map();
+                for (let channel of channels) {
+                    const id = channel.getAttribute('id');
+                    const name = channel.getElementsByTagName('display-name')[0]?.textContent || id;
+                    channelMap.set(id, { name, programmes: [] });
+                }
+
+                const channelOptions = [];
+                for (let [id, channel] of channelMap) {
+                    channelOptions.push({ id, name: channel.name });
+                }
+                channelOptions.sort((a, b) => a.name.localeCompare(b.name));
+                for (let option of channelOptions) {
+                    const opt = document.createElement('option');
+                    opt.value = option.id;
+                    opt.textContent = option.name;
+                    channelSelect.appendChild(opt);
+                }
+                channelSelect.disabled = false;
+
+                const now = new Date();
+                const next24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+                for (let programme of programmes) {
+                    const channelId = programme.getAttribute('channel');
+                    const start = new Date(programme.getAttribute('start').replace(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\s\+.*/, '$1-$2-$3T$4:$5:$6'));
+                    const stop = new Date(programme.getAttribute('stop').replace(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\s\+.*/, '$1-$2-$3T$4:$5:$6'));
+                    const title = programme.getElementsByTagName('title')[0]?.textContent || 'Sans titre';
+                    const desc = programme.getElementsByTagName('desc')[0]?.textContent || '';
+
+                    if (stop >= now) {
+                        const isCurrent = start <= now && now <= stop;
+                        const channelName = channelMap.get(channelId)?.name || channelId;
+
+                        if (start <= next24Hours) {
+                            allPrograms.push({
+                                channelId,
+                                channelName,
+                                start,
+                                stop,
+                                title,
+                                desc,
+                                isCurrent
+                            });
+                        }
+
+                        channelMap.get(channelId)?.programmes.push({ start, stop, title, desc, isCurrent });
+                    }
+                }
+
+                for (let [id, channel] of channelMap) {
+                    if (channel.programmes.length === 0) continue;
+
+                    const channelDiv = document.createElement('div');
+                    channelDiv.className = 'channel';
+                    channelDiv.id = `channel-${id}`;
+                    channelDiv.innerHTML = `<h3>${channel.name}</h3>`;
+
+                    channel.programmes.sort((a, b) => a.start - b.start);
+
+                    const initialProgramsDiv = document.createElement('div');
+                    initialProgramsDiv.className = 'initial-programs';
+                    for (let prog of channel.programmes.slice(0, 5)) {
+                        const progDiv = document.createElement('div');
+                        progDiv.className = `program ${prog.isCurrent ? 'current' : ''}`;
+                        progDiv.dataset.title = prog.title.toLowerCase();
+                        progDiv.dataset.desc = prog.desc.toLowerCase();
+                        progDiv.innerHTML = `
+                            <p><strong>${prog.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${prog.stop.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong></p>
+                            <p>${prog.title}</p>
+                            <p>${prog.desc.substring(0, 100)}${prog.desc.length > 100 ? '...' : ''}</p>
+                        `;
+                        initialProgramsDiv.appendChild(progDiv);
+                    }
+                    channelDiv.appendChild(initialProgramsDiv);
+
+                    const extraProgramsDiv = document.createElement('div');
+                    extraProgramsDiv.className = 'extra-programs';
+                    extraProgramsDiv.id = `extra-programs-${id}`;
+                    channelDiv.appendChild(extraProgramsDiv);
+
+                    const expandButton = document.createElement('button');
+                    expandButton.className = 'expand-button';
+                    expandButton.textContent = '+';
+                    expandButton.onclick = () => toggleExtraPrograms(id, channel.programmes, expandButton, channelDiv);
+                    channelDiv.appendChild(expandButton);
+
+                    channelList.appendChild(channelDiv);
+                }
+
+                if (channelList.innerHTML === '') {
+                    channelList.innerHTML = '<p>Aucun programme disponible pour le moment.</p>';
+                    channelSelect.disabled = true;
+                }
+            } catch (error) {
+                errorDiv.textContent = `Erreur : ${error.message}`;
+                channelSelect.disabled = true;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function searchPrograms() {
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            const channelList = document.getElementById('channel-list');
+            const term = searchInput.value.trim().toLowerCase();
+
+            // Réinitialiser les mises en évidence précédentes
+            const allChannels = channelList.getElementsByClassName('channel');
+            for (let channel of allChannels) {
+                channel.classList.remove('matched');
+                const programs = channel.querySelectorAll('.program');
+                for (let program of programs) {
+                    program.classList.remove('matched-program');
+                }
+            }
+
+            // Vider les résultats si le terme est vide
+            if (!term) {
+                searchResults.style.display = 'none';
+                searchResults.innerHTML = '';
+                return;
+            }
+
+            // Rechercher dans les programmes
+            const matches = allPrograms.filter(prog => 
+                prog.title.toLowerCase().includes(term) || 
+                prog.desc.toLowerCase().includes(term)
+            );
+
+            // Afficher les résultats
+            searchResults.innerHTML = '';
+            if (matches.length === 0) {
+                searchResults.innerHTML = '<p>Aucun programme trouvé.</p>';
+            } else {
+                matches.forEach(match => {
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = 'search-result';
+                    resultDiv.innerHTML = `
+                        <p><strong>${match.channelName}</strong>: ${match.title} (${match.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${match.stop.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})</p>
+                        <p>${match.desc.substring(0, 100)}${match.desc.length > 100 ? '...' : ''}</p>
+                        <p><a onclick="scrollToChannel('${match.channelId}')">Voir la chaîne</a></p>
+                    `;
+                    searchResults.appendChild(resultDiv);
+
+                    // Mettre en évidence la chaîne correspondante
+                    const channelDiv = document.getElementById(`channel-${match.channelId}`);
+                    if (channelDiv) {
+                        channelDiv.classList.add('matched');
+
+                        // Mettre en évidence les programmes correspondants
+                        const programs = channelDiv.querySelectorAll('.program');
+                        programs.forEach(program => {
+                            const title = program.dataset.title || '';
+                            const desc = program.dataset.desc || '';
+                            if (title.includes(term) || desc.includes(term)) {
+                                program.classList.add('matched-program');
+                            }
+                        });
+                    }
+                });
+            }
+            searchResults.style.display = 'block';
+        }
+
+        function resetHighlights() {
+            const channelList = document.getElementById('channel-list');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            const channelSelect = document.getElementById('channel-select');
+
+            // Réinitialiser les mises en évidence des chaînes et des programmes
+            const allChannels = channelList.getElementsByClassName('channel');
+            for (let channel of allChannels) {
+                channel.classList.remove('matched');
+                channel.classList.remove('highlighted');
+                const programs = channel.querySelectorAll('.program');
+                for (let program of programs) {
+                    program.classList.remove('matched-program');
+                }
+
+                // Refermer les cadres ouverts
+                const extraProgramsDiv = channel.querySelector('.extra-programs');
+                const expandButton = channel.querySelector('.expand-button');
+                if (extraProgramsDiv && expandButton && extraProgramsDiv.classList.contains('show')) {
+                    extraProgramsDiv.classList.remove('show');
+                    channel.classList.remove('expanded');
+                    expandButton.textContent = '+';
+                    expandButton.classList.remove('expanded');
+                }
+            }
+
+            // Réinitialiser la recherche
+            searchInput.value = '';
+            searchResults.style.display = 'none';
+            searchResults.innerHTML = '';
+
+            // Réinitialiser le menu déroulant des chaînes
+            channelSelect.value = '';
+        }
+
+        function toggleExtraPrograms(channelId, programmes, button, channelDiv) {
+            const extraProgramsDiv = document.getElementById(`extra-programs-${channelId}`);
+            const isExpanded = extraProgramsDiv.classList.contains('show');
+
+            if (isExpanded) {
+                extraProgramsDiv.classList.remove('show');
+                channelDiv.classList.remove('expanded');
+                button.textContent = '+';
+                button.classList.remove('expanded');
+            } else {
+                extraProgramsDiv.innerHTML = '';
+                const now = new Date();
+                const next24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+                const nextPrograms = programmes.filter(prog => prog.start <= next24Hours && prog.stop >= now);
+                if (nextPrograms.length === 0) {
+                    extraProgramsDiv.innerHTML = '<p>Aucun programme prévu dans les prochaines 24 heures.</p>';
+                } else {
+                    const term = document.getElementById('search-input').value.trim().toLowerCase();
+                    for (let prog of nextPrograms) {
+                        const progDiv = document.createElement('div');
+                        progDiv.className = `program ${prog.isCurrent ? 'current' : ''}`;
+                        progDiv.dataset.title = prog.title.toLowerCase();
+                        progDiv.dataset.desc = prog.desc.toLowerCase();
+                        if (term && (prog.title.toLowerCase().includes(term) || prog.desc.toLowerCase().includes(term))) {
+                            progDiv.classList.add('matched-program');
+                        }
+                        progDiv.innerHTML = `
+                            <p><strong>${prog.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${prog.stop.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong></p>
+                            <p>${prog.title}</p>
+                            <p>${prog.desc.substring(0, 100)}${prog.desc.length > 100 ? '...' : ''}</p>
+                        `;
+                        extraProgramsDiv.appendChild(progDiv);
+                    }
+                }
+
+                extraProgramsDiv.classList.add('show');
+                channelDiv.classList.add('expanded');
+                button.textContent = '−';
+                button.classList.add('expanded');
+            }
+        }
+
+        function scrollToChannel(channelId) {
+            if (!channelId) {
+                console.log("Aucun channelId fourni");
+                return;
+            }
+
+            const previouslyHighlighted = document.querySelector('.channel.highlighted');
+            if (previouslyHighlighted) {
+                previouslyHighlighted.classList.remove('highlighted');
+            }
+
+            const channelElement = document.getElementById(`channel-${channelId Foviptv EPG (XML) - Worker</option>
         </select>
         <select id="channel-select" onchange="scrollToChannel(this.value)" disabled>
             <option value="">Choisir une chaîne</option>
