@@ -176,26 +176,16 @@
             <option value="https://epg.pw/xmltv/epg_US.xml.gz">United States (US, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_VN.xml.gz">Vietnam (VN, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_ZA.xml.gz">South Africa (ZA, GZ)</option>
-            <!-- Sources via api.cors.lol -->
-            <option value="https://api.cors.lol/?url=https://tvprofil.net/xmltv/data/epg_tvprofil.net.xml">TvProfil (XML) - api.cors.lol</option>
-            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_UK1.xml.gz">UK 1 (GZ) - api.cors.lol</option>
-            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_SPORTKLUB1.xml.gz">SportKlub (GZ) - api.cors.lol</option>
-            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_OPTUSSPORTS1.xml.gz">Optus Sports (GZ) - api.cors.lol</option>
-            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_FR1.xml.gz">France (GZ) - api.cors.lol</option>
-            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_BEIN1.xml.gz">BEIN SPORT (GZ) - api.cors.lol</option>
-            <option value="https://api.cors.lol/?url=https://xmltvfr.fr/xmltv/xmltv.xml.gz">XML TV Complet (GZ) - api.cors.lol</option>
-            <option value="https://api.cors.lol/?url=https://xmltvfr.fr/xmltv/xmltv_tnt.xml.gz">XML TV TNT France (GZ) - api.cors.lol</option>
-            <option value="https://api.cors.lol/?url=https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz">XML TV France (GZ) - api.cors.lol</option>
-            <!-- Sources via corsproxy.io -->
-            <option value="https://corsproxy.io/?url=https://tvprofil.net/xmltv/data/epg_tvprofil.net.xml">TvProfil (XML) - corsproxy.io</option>
-            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_UK1.xml.gz">UK 1 (GZ) - corsproxy.io</option>
-            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_SPORTKLUB1.xml.gz">SportKlub (GZ) - corsproxy.io</option>
-            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_OPTUSSPORTS1.xml.gz">Optus Sports (GZ) - corsproxy.io</option>
-            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_FR1.xml.gz">France (GZ) - corsproxy.io</option>
-            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_BEIN1.xml.gz">BEIN SPORT (GZ) - corsproxy.io</option>
-            <option value="https://corsproxy.io/?url=https://xmltvfr.fr/xmltv/xmltv.xml.gz">XML TV Complet (GZ) - corsproxy.io</option>
-            <option value="https://corsproxy.io/?url=https://xmltvfr.fr/xmltv/xmltv_tnt.xml.gz">XML TV TNT France (GZ) - corsproxy.io</option>
-            <option value="https://corsproxy.io/?url=https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz">XML TV France (GZ) - corsproxy.io</option>
+            <!-- Sources via Worker (proxy.mrdigilink.workers.dev) -->
+            <option value="https://proxy.mrdigilink.workers.dev/?url=https://tvprofil.net/xmltv/data/epg_tvprofil.net.xml">TvProfil (XML) - Worker</option>
+            <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_UK1.xml.gz">UK 1 (GZ) - Worker</option>
+            <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_SPORTKLUB1.xml.gz">SportKlub (GZ) - Worker</option>
+            <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_OPTUSSPORTS1.xml.gz">Optus Sports (GZ) - Worker</option>
+            <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_FR1.xml.gz">France (GZ) - Worker</option>
+            <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_BEIN1.xml.gz">BEIN SPORT (GZ) - Worker</option>
+            <option value="https://proxy.mrdigilink.workers.dev/?url=https://xmltvfr.fr/xmltv/xmltv.xml.gz">XML TV Complet (GZ) - Worker</option>
+            <option value="https://proxy.mrdigilink.workers.dev/?url=https://xmltvfr.fr/xmltv/xmltv_tnt.xml.gz">XML TV TNT France (GZ) - Worker</option>
+            <option value="https://proxy.mrdigilink.workers.dev/?url=https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz">XML TV France (GZ) - Worker</option>
         </select>
         <select id="channel-select" onchange="scrollToChannel(this.value)" disabled>
             <option value="">Choisir une chaîne</option>
@@ -521,5 +511,5 @@
 
         window.onload = loadCategory;
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92fa51badebcbfc4',t:'MTc0NDU0MDU1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
