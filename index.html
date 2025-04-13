@@ -153,12 +153,79 @@
     <h1>Guide TV XMLTV</h1>
     <div>
         <select id="category-select" onchange="loadCategory()">
-            <option value="https://api.cors.lol/?url=https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz" selected>XML TV France (api.cors.lol)</option>
-            <option value="https://corsproxy.io/?url=https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz">XML TV France (corsproxy.io)</option>
-            <option value="https://cors-proxy.htmldriven.com/?url=https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz">XML TV France (cors-proxy.htmldriven)</option>
-            <option value="https://thingproxy.freeboard.io/fetch/https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz">XML TV France (thingproxy.freeboard)</option>
-            <option value="https://api.allorigins.win/raw?url=https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz">XML TV France (api.allorigins.win)</option>
-            <option value="http://alloworigin.com/get?url=https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz">XML TV France (alloworigin.com)</option>
+            <!-- Sources epg.pw directement (sans proxy) -->
+            <option value="https://epg.pw/xmltv/epg.xml">All (XML)</option>
+            <option value="https://epg.pw/xmltv/epg.xml.gz">All (GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_lite.xml">Lite (XML)</option>
+            <option value="https://epg.pw/xmltv/epg_lite.xml.gz">Lite (GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_AU.xml">Australia (AU, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_AU.xml.gz">Australia (AU, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_BR.xml">Brazil (BR, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_BR.xml.gz">Brazil (BR, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_CA.xml">Canada (CA, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_CA.xml.gz">Canada (CA, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_CN.xml">China (CN, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_CN.xml.gz">China (CN, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_DE.xml">Germany (DE, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_DE.xml.gz">Germany (DE, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_FR.xml" selected>France (FR, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_FR.xml.gz">France (FR, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_GB.xml">United Kingdom (GB, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_GB.xml.gz">United Kingdom (GB, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_HK.xml">Hong Kong (HK, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_HK.xml.gz">Hong Kong (HK, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_ID.xml">Indonesia (ID, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_ID.xml.gz">Indonesia (ID, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_IN.xml">India (IN, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_IN.xml.gz">India (IN, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_JP.xml">Japan (JP, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_JP.xml.gz">Japan (JP, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_MY.xml">Malaysia (MY, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_MY.xml.gz">Malaysia (MY, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_NZ.xml">New Zealand (NZ, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_NZ.xml.gz">New Zealand (NZ, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_PH.xml">Philippines (PH, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_PH.xml.gz">Philippines (PH, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_RU.xml">Russian Federation (RU, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_RU.xml.gz">Russian Federation (RU, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_SG.xml">Singapore (SG, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_SG.xml.gz">Singapore (SG, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_TW.xml">Taiwan (TW, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_TW.xml.gz">Taiwan (TW, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_US.xml">United States (US, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_US.xml.gz">United States (US, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_VN.xml">Vietnam (VN, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_VN.xml.gz">Vietnam (VN, GZ)</option>
+            <option value="https://epg.pw/xmltv/epg_ZA.xml">South Africa (ZA, XML)</option>
+            <option value="https://epg.pw/xmltv/epg_ZA.xml.gz">South Africa (ZA, GZ)</option>
+            <!-- Nouvelles sources via api.cors.lol -->
+            <option value="https://api.cors.lol/?url=https://tvprofil.net/xmltv/data/epg_sport_live_tvprofil.net.xml">Sports Monde (XML) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://tvprofil.net/xmltv/data/epg_tvprofil.net.xml">TvProfil (XML) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_US_SPORTS1.xml.gz">SPORTS US (GZ) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_UK1.xml.gz">UK 1 (GZ) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_THESPORTPLUS1.xml.gz">The Sport Plus (GZ) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_SSPORTPLUS1.xml.gz">SSPORT Plus (GZ) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_SPORTKLUB1.xml.gz">SportKlub (GZ) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_OPTUSSPORTS1.xml.gz">Optus Sports (GZ) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_FR1.xml.gz">France (GZ) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_DIRECTVSPORTS1.xml.gz">DirecTV Sports (GZ) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_BEIN1.xml.gz">BEIN SPORT (GZ) - api.cors.lol</option>
+            <option value="https://api.cors.lol/?url=https://epgshare01.online/epgshare01/epg_ripper_ALL_SOURCES1.xml.gz">ALL Sources (GZ) - api.cors.lol</option>
+            <!-- Nouvelles sources via corsproxy.io -->
+            <option value="https://corsproxy.io/?url=https://tvprofil.net/xmltv/data/epg_sport_live_tvprofil.net.xml">Sports Monde (XML) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://tvprofil.net/xmltv/data/epg_tvprofil.net.xml">TvProfil (XML) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_US_SPORTS1.xml.gz">SPORTS US (GZ) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_UK1.xml.gz">UK 1 (GZ) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_THESPORTPLUS1.xml.gz">The Sport Plus (GZ) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_SSPORTPLUS1.xml.gz">SSPORT Plus (GZ) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_SPORTKLUB1.xml.gz">SportKlub (GZ) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_OPTUSSPORTS1.xml.gz">Optus Sports (GZ) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_FR1.xml.gz">France (GZ) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_DIRECTVSPORTS1.xml.gz">DirecTV Sports (GZ) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_BEIN1.xml.gz">BEIN SPORT (GZ) - corsproxy.io</option>
+            <option value="https://corsproxy.io/?url=https://epgshare01.online/epgshare01/epg_ripper_ALL_SOURCES1.xml.gz">ALL Sources (GZ) - corsproxy.io</option>
+            <!-- Source compatible CORS directe -->
+            <option value="https://i.mjh.nz/world/epg.xml.gz">MJH World EPG</option>
         </select>
         <select id="channel-select" onchange="scrollToChannel(this.value)" disabled>
             <option value="">Choisir une chaîne</option>
@@ -199,15 +266,15 @@
 
             try {
                 let xmlText;
-                if (url.includes('xmltv_fr.xml.gz') || url.includes('xmltv.xml.gz') || url.includes('xmltv_tnt.xml.gz')) {
+                if (url.includes('.gz') || url.includes('i.mjh.nz')) {
                     const response = await fetch(url);
-                    if (!response.ok) throw new Error('Erreur réseau lors du chargement du fichier GZ via proxy');
+                    if (!response.ok) throw new Error('Erreur réseau lors du chargement du fichier GZ');
                     const arrayBuffer = await response.arrayBuffer();
                     const decompressed = pako.ungzip(new Uint8Array(arrayBuffer));
                     xmlText = new TextDecoder().decode(decompressed);
                 } else {
                     const response = await fetch(url);
-                    if (!response.ok) throw new Error('Erreur réseau lors du chargement du fichier XML via proxy');
+                    if (!response.ok) throw new Error('Erreur réseau lors du chargement du fichier XML');
                     xmlText = await response.text();
                 }
 
