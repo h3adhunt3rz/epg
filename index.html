@@ -154,38 +154,36 @@
     <div>
         <select id="category-select" onchange="loadCategory()">
             <!-- Sources epg.pw directement (sans proxy, uniquement .gz) -->
-            <option value="https://epg.pw/xmltv/epg.xml.gz">All (GZ)</option>
             <option value="https://epg.pw/xmltv/epg_lite.xml.gz">Lite (GZ)</option>
             <option value="https://epg.pw/xmltv/epg_AU.xml.gz">Australia (AU, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_BR.xml.gz">Brazil (BR, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_CA.xml.gz">Canada (CA, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_CN.xml.gz">China (CN, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_DE.xml.gz">Germany (DE, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_FR.xml.gz" selected>France (FR, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_GB.xml.gz">United Kingdom (GB, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_HK.xml.gz">Hong Kong (HK, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_ID.xml.gz">Indonesia (ID, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_IN.xml.gz">India (IN, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_JP.xml.gz">Japan (JP, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_MY.xml.gz">Malaysia (MY, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_NZ.xml.gz">New Zealand (NZ, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_PH.xml.gz">Philippines (PH, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_RU.xml.gz">Russian Federation (RU, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_SG.xml.gz">Singapore (SG, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_TW.xml.gz">Taiwan (TW, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_US.xml.gz">United States (US, GZ)</option>
-            <option value="https://epg.pw/xmltv/epg_VN.xml.gz">Vietnam (VN, GZ)</option>
             <option value="https://epg.pw/xmltv/epg_ZA.xml.gz">South Africa (ZA, GZ)</option>
             <!-- Sources via Worker (proxy.mrdigilink.workers.dev) -->
-            <option value="https://proxy.mrdigilink.workers.dev/?url=https://tvprofil.net/xmltv/data/epg_tvprofil.net.xml">TvProfil (XML) - Worker</option>
             <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_UK1.xml.gz">UK 1 (GZ) - Worker</option>
-            <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_SPORTKLUB1.xml.gz">SportKlub (GZ) - Worker</option>
-            <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_OPTUSSPORTS1.xml.gz">Optus Sports (GZ) - Worker</option>
             <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_FR1.xml.gz">France (GZ) - Worker</option>
             <option value="https://proxy.mrdigilink.workers.dev/?url=https://epgshare01.online/epgshare01/epg_ripper_BEIN1.xml.gz">BEIN SPORT (GZ) - Worker</option>
             <option value="https://proxy.mrdigilink.workers.dev/?url=https://xmltvfr.fr/xmltv/xmltv.xml.gz">XML TV Complet (GZ) - Worker</option>
             <option value="https://proxy.mrdigilink.workers.dev/?url=https://xmltvfr.fr/xmltv/xmltv_tnt.xml.gz">XML TV TNT France (GZ) - Worker</option>
             <option value="https://proxy.mrdigilink.workers.dev/?url=https://xmltvfr.fr/xmltv/xmltv_fr.xml.gz">XML TV France (GZ) - Worker</option>
+            <!-- Nouvelles sources i.mjh.nz directement -->
+            <option value="https://i.mjh.nz/SamsungTVPlus/fr.xml.gz">SamsungTVPlus France (GZ)</option>
+            <option value="https://i.mjh.nz/SamsungTVPlus/all.xml.gz">SamsungTVPlus All (GZ)</option>
+            <option value="https://i.mjh.nz/SamsungTVPlus/us.xml.gz">SamsungTVPlus US (GZ)</option>
+            <option value="https://i.mjh.nz/SamsungTVPlus/it.xml.gz">SamsungTVPlus Italy (GZ)</option>
+            <option value="https://i.mjh.nz/SamsungTVPlus/gb.xml.gz">SamsungTVPlus UK (GZ)</option>
+            <option value="https://i.mjh.nz/SamsungTVPlus/de.xml.gz">SamsungTVPlus Germany (GZ)</option>
+            <option value="https://i.mjh.nz/SamsungTVPlus/ca.xml.gz">SamsungTVPlus Canada (GZ)</option>
+            <option value="https://i.mjh.nz/SkyGo/epg.xml.gz">SkyGo (GZ)</option>
+            <option value="https://i.mjh.nz/SkySportNow/epg.xml.gz">SkySportNow (GZ)</option>
+            <option value="https://i.mjh.nz/all/epg.xml.gz">All EPG (GZ)</option>
+            <option value="https://i.mjh.nz/hgtv_go/epg.xml.gz">HGTV Go (GZ)</option>
         </select>
         <select id="channel-select" onchange="scrollToChannel(this.value)" disabled>
             <option value="">Choisir une chaîne</option>
@@ -495,7 +493,7 @@
                 return;
             }
 
-            const previouslyHighlighted = document.querySelector('.channel.highlighted');
+           Fundamentally, the previouslyHighlighted = document.querySelector('.channel.highlighted');
             if (previouslyHighlighted) {
                 previouslyHighlighted.classList.remove('highlighted');
             }
